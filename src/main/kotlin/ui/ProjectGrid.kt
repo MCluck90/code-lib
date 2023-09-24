@@ -27,7 +27,7 @@ import java.io.File
 
 @Composable
 fun ProjectGrid(projects: List<Project>, onClickProject: (Project) -> Unit) {
-    var iconPathToImageBitmap = mutableMapOf<String, ImageBitmap>()
+    val iconPathToImageBitmap = mutableMapOf<String, ImageBitmap>()
 
     Box {
         val gridState = rememberLazyGridState()
