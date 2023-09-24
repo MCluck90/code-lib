@@ -1,11 +1,13 @@
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,7 @@ fun App() {
         .sortedBy { it.name.lowercase(Locale.getDefault()) }
     val allTags = allProjects.flatMap { it.tags }.toSet().sortedBy { it.lowercase(Locale.getDefault()) }
     var selectedProject by remember { mutableStateOf<Project?>(null) }
+    val readmeScrollState = rememberScrollState(0)
     fun onClickProject(project: Project) {
         selectedProject = project
     }
@@ -64,8 +67,21 @@ fun App() {
                 }
                 Column(Modifier.weight(1f)) {
                     Text(text = selectedProject?.name ?: "")
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(text = selectedProject?.tags?.joinToString(", ") ?: "")
-                    Text(text = selectedProject?.readme ?: "")
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Surface(color = Color(0.1f, 0.1f, 0.1f), modifier = Modifier.fillMaxSize()) {
+                        Box {
+                            Text(
+                                text = selectedProject?.readme ?: "",
+                                modifier = Modifier.verticalScroll(readmeScrollState)
+                            )
+                            VerticalScrollbar(
+                                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                                adapter = rememberScrollbarAdapter(scrollState = readmeScrollState)
+                            )
+                        }
+                    }
                 }
             }
         }
