@@ -10,31 +10,31 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TagFilter() {
-  var isFiltersOpen by remember { mutableStateOf(false) }
-  fun onFiltersClick() {
-    isFiltersOpen = true
-  }
-
-  Button(onClick = ::onFiltersClick) {
-    Text("Tags")
-    DropdownMenu(
-      expanded = isFiltersOpen,
-      offset = DpOffset((-16).dp, 8.dp),
-      onDismissRequest = { isFiltersOpen = false }
-    ) {
-      TagFilterItem("Assembly")
-      TagFilterItem("Kotlin")
-      TagFilterItem("TypeScript")
+    var isFiltersOpen by remember { mutableStateOf(false) }
+    fun onFiltersClick() {
+        isFiltersOpen = true
     }
-  }
+
+    Button(onClick = ::onFiltersClick) {
+        Text("Tags")
+        DropdownMenu(
+            expanded = isFiltersOpen,
+            offset = DpOffset((-16).dp, 8.dp),
+            onDismissRequest = { isFiltersOpen = false }
+        ) {
+            TagFilterItem("Assembly")
+            TagFilterItem("Kotlin")
+            TagFilterItem("TypeScript")
+        }
+    }
 }
 
 @Composable
 private fun TagFilterItem(tag: String) {
-  DropdownMenuItem(onClick = {}) {
-    Row(Modifier.fillMaxSize(), Arrangement.spacedBy(8.dp)) {
-      Checkbox(checked = false, onCheckedChange = null)
-      Text(text = tag)
+    DropdownMenuItem(onClick = {}) {
+        Row(Modifier.fillMaxSize(), Arrangement.spacedBy(8.dp)) {
+            Checkbox(checked = false, onCheckedChange = null)
+            Text(text = tag)
+        }
     }
-  }
 }

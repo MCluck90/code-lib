@@ -19,27 +19,27 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ProjectGrid(projects: List<Project>) {
-  Box {
-    val gridState = rememberLazyGridState()
+    Box {
+        val gridState = rememberLazyGridState()
 
-    LazyVerticalGrid(
-      state = gridState,
-      columns = GridCells.Adaptive(128.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
-      horizontalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-      items(projects) { ProjectCard(it) }
+        LazyVerticalGrid(
+            state = gridState,
+            columns = GridCells.Adaptive(128.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(projects) { ProjectCard(it) }
+        }
+        VerticalScrollbar(
+            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+            adapter = rememberScrollbarAdapter(scrollState = gridState)
+        )
     }
-    VerticalScrollbar(
-      modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-      adapter = rememberScrollbarAdapter(scrollState = gridState)
-    )
-  }
 }
 
 @Composable
 private fun ProjectCard(project: Project) {
-  Card {
-    Text(text = project.name)
-  }
+    Card {
+        Text(text = project.name)
+    }
 }
