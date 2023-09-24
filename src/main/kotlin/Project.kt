@@ -56,6 +56,14 @@ class Project(val path: Path) {
             return ""
         }
 
+    val openCommand: String
+        get() {
+            if (tags.contains("IntelliJ")) {
+                return "intellij-idea-community $path"
+            }
+            return "code $path"
+        }
+
     fun inferTags(): List<String> {
         fun hasFile(fileName: String): Boolean {
             return Paths.get(path.toString(), fileName).exists()

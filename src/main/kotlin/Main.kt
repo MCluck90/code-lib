@@ -55,11 +55,10 @@ fun App() {
         selectedProject = project
     }
     fun onOpenProject() {
-        val path = selectedProject?.path
-        if (path != null) {
-            Runtime.getRuntime().exec("code $path")
+        val openCommand = selectedProject?.openCommand
+        if (openCommand != null) {
+            Runtime.getRuntime().exec(openCommand)
         }
-
     }
 
     MaterialTheme(colors = colors) {
