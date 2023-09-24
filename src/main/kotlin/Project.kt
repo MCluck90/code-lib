@@ -121,7 +121,7 @@ fun findProjects(): List<Project> {
         val directories = allFiles.filter { it.isDirectory() }
         val files = allFiles.filter { it.isRegularFile() }
         if (files.isNotEmpty()) {
-            var project = Project(path)
+            val project = Project(path)
             if (project.tags.isEmpty()) {
                 project.tags = project.inferTags()
             }
