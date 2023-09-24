@@ -10,7 +10,12 @@ import java.nio.file.Paths
 data class ProjectConfig(val tags: List<String>)
 
 @Serializable
-data class ConfigFile(val roots: List<String>, val tagIconsDirectory: String, val projects: MutableMap<String, ProjectConfig>)
+data class ConfigFile(
+    val roots: List<String>,
+    val tagIconsDirectory: String,
+    val tagIconPriority: List<String>,
+    val projects: MutableMap<String, ProjectConfig>
+)
 
 object Config {
     private lateinit var configFile: ConfigFile
@@ -21,8 +26,12 @@ object Config {
     val roots: List<Path>
         get() = configFile.roots.map { Paths.get(it.replace("~", System.getenv("HOME"))) }
 
+
     val tagIconsDirectory: Path
         get() = Paths.get(configFile.tagIconsDirectory.replace("~", System.getenv("HOME")))
+
+    val tagIconPriority: List<String>
+        get() = configFile.tagIconPriority
 
     init {
         reload()
@@ -34,6 +43,12 @@ object Config {
             val baseConfigFile = ConfigFile(
                 roots = listOf("~/code"),
                 tagIconsDirectory = "~/Pictures/CodeLib Icons",
+                tagIconPriority = listOf(
+                    "Godot",
+                    "Rust",
+                    "Gleam",
+                    "F#",
+                ),
                 projects = mutableMapOf()
             )
             Files.write(configFilePath, Json.encodeToString(baseConfigFile).toByteArray())

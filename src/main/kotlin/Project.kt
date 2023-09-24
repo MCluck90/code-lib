@@ -16,6 +16,18 @@ class Project(val path: Path) {
         get() {
             val tagIconsDir = Config.tagIconsDirectory.toString()
 
+            // Check the priority tags before running through the list in order
+            for (tag in Config.tagIconPriority) {
+                if (!tags.contains(tag)) {
+                    continue
+                }
+
+                val path = Paths.get(tagIconsDir, "$tag.png")
+                if (path.exists()) {
+                    return path
+                }
+            }
+
             for (tag in tags) {
                 val path = Paths.get(tagIconsDir, "$tag.png")
                 if (path.exists()) {
