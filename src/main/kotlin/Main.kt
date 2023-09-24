@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import ui.ProjectGrid
 import ui.TagFilter
 
 @Composable
@@ -33,11 +34,14 @@ fun App() {
         onSurface = Color(0.8f, 0.8f, 0.8f),
     )
 
+    val projects = (1..500).map { Project("Project $it") }
+
     MaterialTheme(colors = colors) {
         Surface {
             Row(Modifier.fillMaxSize().padding(16.dp), Arrangement.spacedBy(5.dp)) {
                 Column(Modifier.weight(3f)) {
                     TagFilter()
+                    ProjectGrid(projects)
                 }
                 Column(Modifier.weight(1f)) {
                     Text("Project Name")
