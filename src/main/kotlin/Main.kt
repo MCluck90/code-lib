@@ -5,7 +5,7 @@ import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -35,18 +35,25 @@ fun App() {
         onSurface = Color(0.8f, 0.8f, 0.8f),
     )
     val projects = findProjects().sortedBy { it.name.lowercase(Locale.getDefault()) }
+    var selectedProject by remember { mutableStateOf<Project?>(null) }
+    fun onClickProject(project: Project) {
+        selectedProject = project
+    }
 
     MaterialTheme(colors = colors) {
         Surface {
             Row(Modifier.fillMaxSize().padding(16.dp), Arrangement.spacedBy(5.dp)) {
                 Column(Modifier.weight(3f)) {
                     TagFilter()
-                    ProjectGrid(projects)
+                    ProjectGrid(
+                        projects = projects,
+                        onClickProject = ::onClickProject
+                    )
                 }
                 Column(Modifier.weight(1f)) {
-                    Text("Project Name")
-                    Text("Tag A, Tag B")
-                    Text("Readme")
+                    Text(text = selectedProject?.name ?: "")
+                    Text(text = selectedProject?.tags?.joinToString(", ") ?: "")
+                    Text(text = selectedProject?.readme ?: "")
                 }
             }
         }
