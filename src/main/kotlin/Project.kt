@@ -73,6 +73,7 @@ class Project(val path: Path) {
         val isGodot = hasFileWithExtension("tscn")
         val isHaskell = hasFileWithExtension("hs")
         val isHtml = hasFileWithExtension("html")
+        val isIntelliJ = hasFile(".idea")
         val isKotlin = hasFile("build.gradle.kts")
         val isMint = hasFile("mint.json")
         val isNodeJs = hasFile("package.json")
@@ -95,6 +96,7 @@ class Project(val path: Path) {
             if (isGodot) "Godot" else null,
             if (isHaskell) "Haskell" else null,
             if (isHtml) "HTML" else null,
+            if (isIntelliJ) "IntelliJ" else null,
             if (isKotlin) "Kotlin" else null,
             if (isMint) "Mint" else null,
             if (isNodeJs) "Node.js" else null,
