@@ -24,7 +24,7 @@ fun App() {
     val colors = Colors(
         primary = Color(0.1686f, 0.1882f, 0.2f),
         primaryVariant = Color(0.2686f, 0.2882f, 0.3f),
-        secondary = Color.Blue,
+        secondary = Color(0.8f, 0.8f, 0.8f),
         secondaryVariant = Color(0f, 0.2f, 0.8f),
         surface = Color(0.1059f, 0.1255f, 0.1373f),
         background = Color(0.1059f, 0.1255f, 0.1373f),
