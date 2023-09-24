@@ -14,9 +14,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.loadImageBitmap
@@ -27,6 +27,8 @@ import java.io.File
 
 @Composable
 fun ProjectGrid(projects: List<Project>, onClickProject: (Project) -> Unit) {
+    var iconPathToImageBitmap = mutableMapOf<String, ImageBitmap>()
+
     Box {
         val gridState = rememberLazyGridState()
 
@@ -36,7 +38,18 @@ fun ProjectGrid(projects: List<Project>, onClickProject: (Project) -> Unit) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            items(projects) { ProjectCard(it, onClickProject) }
+            items(projects) {
+                val iconPath = it.iconPath.toString()
+                val icon = if (iconPathToImageBitmap.containsKey(iconPath)) {
+                    iconPathToImageBitmap[iconPath]!!
+                } else {
+                    val imageFile = File(iconPath)
+                    val image = loadImageBitmap(imageFile.inputStream())
+                    iconPathToImageBitmap[iconPath] = image
+                    image
+                }
+                ProjectCard(project = it, icon = icon, onClick = onClickProject)
+            }
         }
         VerticalScrollbar(
             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
@@ -46,19 +59,14 @@ fun ProjectGrid(projects: List<Project>, onClickProject: (Project) -> Unit) {
 }
 
 @Composable
-private fun ProjectCard(project: Project, onClick: (Project) -> Unit) {
-    val imageFile = File(project.iconPath.toString())
-    val image = remember(imageFile) {
-        loadImageBitmap(imageFile.inputStream())
-    }
-
+private fun ProjectCard(project: Project, icon: ImageBitmap, onClick: (Project) -> Unit) {
     Card(modifier = Modifier
         .height(160.dp)
         .clickable { onClick(project) }
     ) {
         Column {
             Image(
-                painter = BitmapPainter(image = image),
+                painter = BitmapPainter(image = icon),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
