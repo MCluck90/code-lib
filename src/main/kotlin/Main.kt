@@ -14,6 +14,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import ui.ProjectGrid
 import ui.TagFilter
+import java.util.*
 
 @Composable
 @Preview
@@ -33,8 +34,7 @@ fun App() {
         onSecondary = Color.Black,
         onSurface = Color(0.8f, 0.8f, 0.8f),
     )
-
-    val projects = (1..500).map { Project("Project $it") }
+    val projects = findProjects().sortedBy { it.name.lowercase(Locale.getDefault()) }
 
     MaterialTheme(colors = colors) {
         Surface {

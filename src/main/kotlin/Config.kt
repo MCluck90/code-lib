@@ -2,6 +2,7 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 
 @Serializable
@@ -9,6 +10,9 @@ data class ConfigFile(val roots: List<String>)
 
 object Config {
     private lateinit var configFile: ConfigFile
+
+    val roots: List<Path>
+        get() = configFile.roots.map { Paths.get(it.replace("~", System.getenv("HOME"))) }
 
     init {
         reload()
