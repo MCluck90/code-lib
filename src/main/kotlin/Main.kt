@@ -54,6 +54,13 @@ fun App() {
     fun onClickProject(project: Project) {
         selectedProject = project
     }
+    fun onOpenProject() {
+        val path = selectedProject?.path
+        if (path != null) {
+            Runtime.getRuntime().exec("code $path")
+        }
+
+    }
 
     MaterialTheme(colors = colors) {
         Surface {
@@ -69,7 +76,11 @@ fun App() {
                     Text(text = selectedProject?.name ?: "")
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = selectedProject?.tags?.joinToString(", ") ?: "")
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = ::onOpenProject, enabled = selectedProject != null) {
+                        Text("Open")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
                     Surface(color = Color(0.1f, 0.1f, 0.1f), modifier = Modifier.fillMaxSize()) {
                         Box {
                             Text(
