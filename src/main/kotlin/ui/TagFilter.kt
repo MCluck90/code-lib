@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TagFilter() {
+fun TagFilter(tags: List<String>) {
     var isFiltersOpen by remember { mutableStateOf(false) }
     fun onFiltersClick() {
         isFiltersOpen = true
@@ -22,9 +22,7 @@ fun TagFilter() {
             offset = DpOffset((-16).dp, 8.dp),
             onDismissRequest = { isFiltersOpen = false }
         ) {
-            TagFilterItem("Assembly")
-            TagFilterItem("Kotlin")
-            TagFilterItem("TypeScript")
+            tags.map { TagFilterItem(it) }
         }
     }
 }

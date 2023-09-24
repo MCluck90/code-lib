@@ -35,6 +35,7 @@ fun App() {
         onSurface = Color(0.8f, 0.8f, 0.8f),
     )
     val projects = findProjects().sortedBy { it.name.lowercase(Locale.getDefault()) }
+    val allTags = projects.flatMap { it.tags }.toSet().sortedBy { it.lowercase(Locale.getDefault()) }
     var selectedProject by remember { mutableStateOf<Project?>(null) }
     fun onClickProject(project: Project) {
         selectedProject = project
@@ -44,7 +45,7 @@ fun App() {
         Surface {
             Row(Modifier.fillMaxSize().padding(16.dp), Arrangement.spacedBy(5.dp)) {
                 Column(Modifier.weight(3f)) {
-                    TagFilter()
+                    TagFilter(tags = allTags)
                     ProjectGrid(
                         projects = projects,
                         onClickProject = ::onClickProject
