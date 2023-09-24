@@ -9,10 +9,19 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TagFilter(tags: List<String>) {
+fun TagFilter(tags: List<String>, onTagsSelected: (List<String>) -> Unit) {
+    val selectedTags = remember { mutableStateListOf<String>() }
     var isFiltersOpen by remember { mutableStateOf(false) }
     fun onFiltersClick() {
         isFiltersOpen = true
+    }
+    fun onClickTag(tag: String) {
+        if (selectedTags.contains(tag)) {
+            selectedTags.remove(tag)
+        } else {
+            selectedTags.add(tag)
+        }
+        onTagsSelected(selectedTags.toList())
     }
 
     Button(onClick = ::onFiltersClick) {
@@ -22,16 +31,22 @@ fun TagFilter(tags: List<String>) {
             offset = DpOffset((-16).dp, 8.dp),
             onDismissRequest = { isFiltersOpen = false }
         ) {
-            tags.map { TagFilterItem(it) }
+            tags.map {
+                TagFilterItem(
+                    tag = it,
+                    selected = selectedTags.contains(it),
+                    onClick = ::onClickTag
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun TagFilterItem(tag: String) {
-    DropdownMenuItem(onClick = {}) {
+private fun TagFilterItem(tag: String, selected: Boolean, onClick: (String) -> Unit) {
+    DropdownMenuItem(onClick = { onClick(tag) }) {
         Row(Modifier.fillMaxSize(), Arrangement.spacedBy(8.dp)) {
-            Checkbox(checked = false, onCheckedChange = null)
+            Checkbox(checked = selected, onCheckedChange = null)
             Text(text = tag)
         }
     }

@@ -34,8 +34,19 @@ fun App() {
         onSecondary = Color.Black,
         onSurface = Color(0.8f, 0.8f, 0.8f),
     )
-    val projects = findProjects().sortedBy { it.name.lowercase(Locale.getDefault()) }
-    val allTags = projects.flatMap { it.tags }.toSet().sortedBy { it.lowercase(Locale.getDefault()) }
+
+    var selectedTags by remember { mutableStateOf(listOf<String>()) }
+    val allProjects = findProjects()
+    val projects = allProjects
+        .filter {
+            if (selectedTags.isEmpty()) {
+                true
+            } else {
+                selectedTags.all { tag -> it.tags.contains(tag) }
+            }
+        }
+        .sortedBy { it.name.lowercase(Locale.getDefault()) }
+    val allTags = allProjects.flatMap { it.tags }.toSet().sortedBy { it.lowercase(Locale.getDefault()) }
     var selectedProject by remember { mutableStateOf<Project?>(null) }
     fun onClickProject(project: Project) {
         selectedProject = project
@@ -45,7 +56,7 @@ fun App() {
         Surface {
             Row(Modifier.fillMaxSize().padding(16.dp), Arrangement.spacedBy(5.dp)) {
                 Column(Modifier.weight(3f)) {
-                    TagFilter(tags = allTags)
+                    TagFilter(tags = allTags, onTagsSelected = { selectedTags = it })
                     ProjectGrid(
                         projects = projects,
                         onClickProject = ::onClickProject
