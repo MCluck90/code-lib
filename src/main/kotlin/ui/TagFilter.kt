@@ -1,4 +1,4 @@
-
+package ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +30,7 @@ fun TagFilter() {
 }
 
 @Composable
-fun TagFilterItem(tag: String) {
+private fun TagFilterItem(tag: String) {
   DropdownMenuItem(onClick = {}) {
     Row(Modifier.fillMaxSize(), Arrangement.spacedBy(8.dp)) {
       Checkbox(checked = false, onCheckedChange = null)
