@@ -9,11 +9,15 @@ import java.nio.file.Paths
 data class ProjectConfig(val tags: List<String>)
 
 @Serializable
+data class EditorConfig(val byTag: Map<String, String>, val default: String)
+
+@Serializable
 data class ConfigFile(
     val roots: List<String>,
     val tagIconsDirectory: String,
     val tagIconPriority: List<String>,
-    val projects: MutableMap<String, ProjectConfig>
+    val projects: MutableMap<String, ProjectConfig>,
+    val editors: EditorConfig,
 )
 
 object Config {
@@ -32,6 +36,9 @@ object Config {
     val tagIconPriority: List<String>
         get() = configFile.tagIconPriority
 
+    val editors: EditorConfig
+        get() = configFile.editors
+
     init {
         reload()
     }
@@ -48,7 +55,11 @@ object Config {
                     "Gleam",
                     "F#",
                 ),
-                projects = mutableMapOf()
+                projects = mutableMapOf(),
+                editors = EditorConfig(
+                    default = "code",
+                    byTag = mapOf(Pair("IntelliJ", "intellij-idea-community")),
+                )
             )
             Files.write(configFilePath, Json.encodeToString(baseConfigFile).toByteArray())
         }

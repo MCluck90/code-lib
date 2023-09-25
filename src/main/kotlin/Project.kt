@@ -57,8 +57,14 @@ class Project(val path: Path) {
 
     val openCommand: String
         get() {
-            if (tags.contains("IntelliJ")) {
-                return "intellij-idea-community $path"
+            for ((tag, command) in Config.editors.byTag) {
+                if (tags.contains(tag)) {
+                    return "$command $path"
+                }
+            }
+
+            if (Config.editors.default.isNotEmpty()) {
+                return "${Config.editors.default} $path"
             }
             return "code $path"
         }
