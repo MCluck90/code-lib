@@ -60,18 +60,13 @@ fun ProjectGrid(projects: List<Project>, onClickProject: (Project) -> Unit) {
 
 @Composable
 private fun ProjectCard(project: Project, icon: ImageBitmap, onClick: (Project) -> Unit) {
-    Card(modifier = Modifier
-        .height(160.dp)
-        .clickable { onClick(project) }
-    ) {
+    Card(modifier = Modifier.height(160.dp).clickable { onClick(project) }) {
         Column {
             Image(
                 painter = BitmapPainter(image = icon),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .fillMaxHeight(0.65f)
-                    .align(Alignment.CenterHorizontally)
+                modifier = Modifier.fillMaxHeight(0.65f).align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -80,8 +75,7 @@ private fun ProjectCard(project: Project, icon: ImageBitmap, onClick: (Project) 
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
     }

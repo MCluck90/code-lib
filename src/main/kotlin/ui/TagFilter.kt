@@ -1,4 +1,5 @@
 package ui
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ fun TagFilter(tags: List<String>, onTagsSelected: (List<String>) -> Unit) {
     fun onFiltersClick() {
         isFiltersOpen = true
     }
+
     fun onClickTag(tag: String) {
         if (selectedTags.contains(tag)) {
             selectedTags.remove(tag)

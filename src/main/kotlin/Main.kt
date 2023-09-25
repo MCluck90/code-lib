@@ -1,4 +1,3 @@
-
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
@@ -54,6 +53,7 @@ fun App() {
     fun onClickProject(project: Project) {
         selectedProject = project
     }
+
     fun onOpenProject() {
         val openCommand = selectedProject?.openCommand
         if (openCommand != null) {
