@@ -64,9 +64,9 @@ class Project(val path: Path) {
             return "code $path"
         }
 
-    sealed class TagInferCriteria private constructor(private val values: List<String>) {
-        class SpecificFiles(val fileNames: List<String>) : TagInferCriteria(fileNames)
-        class FileExtensions(val extensions: List<String>) : TagInferCriteria(extensions)
+    sealed class TagInferCriteria private constructor() {
+        class SpecificFiles(val fileNames: List<String>) : TagInferCriteria()
+        class FileExtensions(val extensions: List<String>) : TagInferCriteria()
     }
 
     fun inferTags(): List<String> {
@@ -100,7 +100,7 @@ class Project(val path: Path) {
             Pair("Unity", TagInferCriteria.SpecificFiles(listOf("ProjectSettings/URPProjectSettings.asset"))),
         )
 
-        var result = mutableListOf<String>()
+        val result = mutableListOf<String>()
         for ((tag, criteria) in tagToCriteria) {
             if (result.contains(tag)) {
                 continue
