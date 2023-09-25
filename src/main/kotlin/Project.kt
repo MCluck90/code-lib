@@ -64,6 +64,11 @@ class Project(val path: Path) {
             return "code $path"
         }
 
+    sealed class TagInferCriteria private constructor(private val values: List<String>) {
+        class SpecificFiles(val fileNames: List<String>) : TagInferCriteria(fileNames)
+        class FileExtensions(val extensions: List<String>) : TagInferCriteria(extensions)
+    }
+
     fun inferTags(): List<String> {
         fun hasFile(fileName: String): Boolean {
             return Paths.get(path.toString(), fileName).exists()
@@ -73,51 +78,43 @@ class Project(val path: Path) {
             return Files.list(path).anyMatch { it.extension == extension }
         }
 
-        val isC = hasFileWithExtension("c")
-        val isCSharp = hasFileWithExtension("cs") || hasFileWithExtension("csproj")
-        val isDeno = hasFile("deno.jsonc")
-        val isFSharp = hasFileWithExtension("fs") || hasFileWithExtension("fsproj")
-        val isGleam = hasFile("gleam.toml")
-        val isGodot = hasFileWithExtension("tscn")
-        val isHaskell = hasFileWithExtension("hs")
-        val isHtml = hasFileWithExtension("html")
-        val isIntelliJ = hasFile(".idea")
-        val isKotlin = hasFile("build.gradle.kts")
-        val isMint = hasFile("mint.json")
-        val isNodeJs = hasFile("package.json")
-        val isPerl = hasFileWithExtension("pl")
-        val isPython = hasFile("requirements.txt") || hasFileWithExtension("py")
-        val isRust = hasFile("Cargo.toml")
-        val isShell = hasFileWithExtension("sh")
-        val isTypeScript = hasFile("tsconfig.json") || hasFile("tsconfig.base.json")
-        val isUnity = hasFile("ProjectSettings/URPProjectSettings.asset")
-        val isUxn = hasFileWithExtension("tal") || hasFile("uxnasm")
-        val isVisualStudio = hasFileWithExtension("sln")
-        val isWasm = hasFileWithExtension("wat") || hasFileWithExtension("wasm")
-
-        return listOfNotNull(
-            if (isC) "C" else null,
-            if (isCSharp) "C#" else null,
-            if (isDeno) "Deno" else null,
-            if (isFSharp) "F#" else null,
-            if (isGleam) "Gleam" else null,
-            if (isGodot) "Godot" else null,
-            if (isHaskell) "Haskell" else null,
-            if (isHtml) "HTML" else null,
-            if (isIntelliJ) "IntelliJ" else null,
-            if (isKotlin) "Kotlin" else null,
-            if (isMint) "Mint" else null,
-            if (isNodeJs) "Node.js" else null,
-            if (isPerl) "Perl" else null,
-            if (isPython) "Python" else null,
-            if (isRust) "Rust" else null,
-            if (isShell) "Shell" else null,
-            if (isTypeScript) "TypeScript" else null,
-            if (isUnity) "Unity" else null,
-            if (isUxn) "uxn" else null,
-            if (isVisualStudio) "Visual Studio" else null,
-            if (isWasm) "Wasm" else null,
+        val tagToCriteria = mapOf(
+            Pair("C", TagInferCriteria.FileExtensions(listOf("c"))),
+            Pair("C#", TagInferCriteria.FileExtensions(listOf("cs", "csproj"))),
+            Pair("Deno", TagInferCriteria.SpecificFiles(listOf("deno.jsonc"))),
+            Pair("F#", TagInferCriteria.FileExtensions(listOf("fs", "fsproj"))),
+            Pair("Gleam", TagInferCriteria.SpecificFiles(listOf("gleam.toml"))),
+            Pair("Godot", TagInferCriteria.FileExtensions(listOf("tscn"))),
+            Pair("Haskell", TagInferCriteria.FileExtensions(listOf("hs"))),
+            Pair("HTML", TagInferCriteria.FileExtensions(listOf("html"))),
+            Pair("IntelliJ", TagInferCriteria.SpecificFiles(listOf(".idea"))),
+            Pair("Kotlin", TagInferCriteria.SpecificFiles(listOf("build.gradle.kts"))),
+            Pair("Mint", TagInferCriteria.SpecificFiles(listOf("mint.json"))),
+            Pair("Node.js", TagInferCriteria.SpecificFiles(listOf("package.json"))),
+            Pair("Perl", TagInferCriteria.FileExtensions(listOf("pl"))),
+            Pair("Python", TagInferCriteria.SpecificFiles(listOf("requirements.txt"))),
+            Pair("Python", TagInferCriteria.FileExtensions(listOf("py"))),
+            Pair("Rust", TagInferCriteria.SpecificFiles(listOf("Cargo.toml"))),
+            Pair("Shell", TagInferCriteria.FileExtensions(listOf("sh"))),
+            Pair("TypeScript", TagInferCriteria.SpecificFiles(listOf("tsconfig.json", "tsconfig.base.json"))),
+            Pair("Unity", TagInferCriteria.SpecificFiles(listOf("ProjectSettings/URPProjectSettings.asset"))),
         )
+
+        var result = mutableListOf<String>()
+        for ((tag, criteria) in tagToCriteria) {
+            if (result.contains(tag)) {
+                continue
+            }
+
+            val shouldAddTag = when (criteria) {
+                is TagInferCriteria.SpecificFiles -> criteria.fileNames.any { hasFile(it) }
+                is TagInferCriteria.FileExtensions -> criteria.extensions.any { hasFileWithExtension(it) }
+            }
+            if (shouldAddTag) {
+                result.add(tag)
+            }
+        }
+        return result
     }
 }
 
